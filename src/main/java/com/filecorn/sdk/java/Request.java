@@ -4,21 +4,16 @@ package com.filecorn.sdk.java;
  * @author Omid Pourhadi
  *
  */
-public abstract class Request
+public class Request
 {
 
     private String url;
     private String postContent;
+    private String pathParameter;
 
     public Request(String url)
     {
         this.url = url;
-    }
-
-    public Request(String url, String postContent)
-    {
-        this.url = url;
-        this.postContent = postContent;
     }
 
     public String getUrl()
@@ -26,18 +21,30 @@ public abstract class Request
         return url;
     }
 
-    public String getPostConent()
+    public String getPostContent()
     {
         return postContent;
     }
 
-    public abstract RequestDecorator get();
+    public void setPostContent(String postContent)
+    {
+        this.postContent = postContent;
+    }
 
-    public abstract RequestDecorator post();
+    public String getPathParameter()
+    {
+        return pathParameter;
+    }
 
-    public abstract RequestDecorator delete();
+    public void setPathParameter(String pathParameter)
+    {
+        this.pathParameter = pathParameter;
+    }
 
-    public abstract RequestDecorator select();
+    public String getPostConent()
+    {
+        return postContent;
+    }
 
     public static class RequestDecorator
     {
@@ -56,8 +63,7 @@ public abstract class Request
 
         public String getContentAsString()
         {
-            if (content == null || content.length == 0)
-                return "";
+            if (content == null || content.length == 0) return "";
             return new String(content);
         }
 

@@ -4,7 +4,7 @@ public interface FileCornApi
 {
 
     
-    public void createFolder(String folderName);
+    public Response createFolder(String folderName);
     
     public void folderList(String folderName);
     

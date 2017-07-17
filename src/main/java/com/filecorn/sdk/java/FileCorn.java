@@ -1,23 +1,57 @@
 package com.filecorn.sdk.java;
 
+import java.io.IOException;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONObject;
+
 /**
- * @author Omid Pourhadi
+ * @author omidp
  *
- * omidpourhadi [AT] gmail [DOT] com
  */
-public final class FileCorn implements FileCornApi
+public class FileCorn extends Request  implements FileCornApi
 {
 
-    public void createFolder(String folderName)
+    RequestBuilder requestBuilder;
+    
+    public FileCorn()
     {
-        throw new UnsupportedOperationException("not implemented yet");
+        super(Env.getCubeUrl());
+        requestBuilder = new RequestBuilder(this);
     }
+    
+    
+    public Response createFolder(String folderName)
+    {
+        try
+        {
+            setPathParameter(folderName);
+            RequestDecorator put = requestBuilder.put();
+            String content = put.getContentAsString();
+            if(content != null)
+            {
+                JSONObject json = new JSONObject(content);
+                return new Response(json.getString("result"), json.getString("message"));
+            }
+            return new Response("failed", "unable to complete request");
+        }
+        catch (ClientProtocolException e)
+        {
+            throw new FileCornException(0);
+        }
+        catch (IOException e)
+        {
+            throw new FileCornException(0);
+        }
+    }
+
 
     public void folderList(String folderName)
     {
-        throw new UnsupportedOperationException("not implemented yet");
+        // TODO Auto-generated method stub
+        
     }
 
     
-    
+
 }
