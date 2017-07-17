@@ -2,8 +2,12 @@ package com.filecorn.sdk.java;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -12,6 +16,8 @@ import org.json.JSONObject;
  */
 public class FileCorn extends Request implements FileCornApi
 {
+
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     RequestBuilder requestBuilder;
 
@@ -46,9 +52,52 @@ public class FileCorn extends Request implements FileCornApi
         }
     }
 
-    public void folderList(String folderName)
+    public FolderResponse folderList(String folderName)
     {
-        throw new UnsupportedOperationException();
+        if (folderName.endsWith("/") == false) folderName += "/";
+        setPathParameter(folderName);
+        try
+        {
+            RequestDecorator rd = requestBuilder.get();
+            String content = rd.getContentAsString();
+            java.util.List<Item> items = new ArrayList<Item>();
+            if (content != null)
+            {
+                JSONObject json = new JSONObject(content);
+                //
+                JSONArray jsonArray = json.getJSONArray("items");
+                for (int i = 0; i < jsonArray.length(); i++)
+                {
+                    JSONObject jsonItem = jsonArray.getJSONObject(i);
+                    Item item = new Item();
+                    String createdAt = jsonItem.getString("created_at");
+                    item.setCreatedAt(sdf.parse(createdAt));
+                    item.setMimeType(jsonItem.getString("mime_type"));
+                    item.setName(jsonItem.getString("name"));
+                    item.setSize(jsonItem.getString("size"));
+                    int isf = jsonItem.getInt("is_folder");
+                    if (isf != 0) item.setFolder(true);
+                    item.setUrl(jsonItem.getString("url"));
+                    items.add(item);
+                }
+
+                return new FolderResponse(items, json.getLong("items_count"));
+            }
+            return new FolderResponse(items, 0L);
+        }
+        catch (ClientProtocolException e)
+        {
+            throw new FileCornException(0);
+        }
+        catch (IOException e)
+        {
+            throw new FileCornException(0);
+        }
+        catch (ParseException e)
+        {
+            // DONOTHING
+            return null;
+        }
     }
 
     public Response upload(File file)

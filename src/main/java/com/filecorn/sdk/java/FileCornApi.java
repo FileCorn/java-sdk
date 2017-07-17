@@ -10,6 +10,6 @@ public interface FileCornApi
     
     public Response upload(File file);
     
-    public void folderList(String folderName);
+    public FolderResponse folderList(String folderName);
     
 }

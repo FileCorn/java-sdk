@@ -44,7 +44,13 @@ public class RequestBuilder
 
     public RequestDecorator get() throws ClientProtocolException, IOException
     {
-        HttpGet get = new HttpGet(request.getUrl());
+        
+        StringBuilder uri = new StringBuilder().append(request.getUrl());
+        if(request.getPathParameter() != null)
+            uri.append("/").append(request.getPathParameter());
+        HttpGet get = new HttpGet(uri.toString());
+        get.setHeader("Accept", "application/json");
+        get.setHeader("User-Agent", "Mozilla/5.0");
         get.setHeader("Authorization", String.format("FC %s", Env.getApiKey()));
         CloseableHttpResponse response = httpclient.execute(get);
         InputStream content = null;
