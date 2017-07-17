@@ -1,5 +1,7 @@
 package com.filecorn.sdk.java;
 
+import java.io.File;
+
 /**
  * @author Omid Pourhadi
  *
@@ -10,10 +12,21 @@ public class Request
     private String url;
     private String postContent;
     private String pathParameter;
+    private File uploadFile;
 
     public Request(String url)
     {
         this.url = url;
+    }
+
+    public File getUploadFile()
+    {
+        return uploadFile;
+    }
+
+    public void setUploadFile(File uploadFile)
+    {
+        this.uploadFile = uploadFile;
     }
 
     public String getUrl()

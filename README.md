@@ -5,7 +5,7 @@ it helps you to empower filecorn's functionality in your java app;
 # How to build
 
 ```
-mvn clean install
+mvn clean install -DskipTests=true
 ```
 
 # How to use
