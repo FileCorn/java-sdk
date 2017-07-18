@@ -49,12 +49,14 @@ public class FileCornTest
     public void testUpload()
     {
         Response f = fc.upload(new File(getClass().getResource("/golestan_header.jpg").getFile()));
+//        Response f = fc.upload(new File(getClass().getResource("/test.txt").getFile()));
         System.out.println(f.getResult());
         System.out.println(f.getMessage());
 
     }
 
     @Test
+    @Ignore
     public void testFolderList() throws ParseException
     {
 
