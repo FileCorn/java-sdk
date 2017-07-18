@@ -69,5 +69,27 @@ public class FileCornTest
         System.out.println(f.getItemCount());
 
     }
+    
+    @Test
+    @Ignore
+    public void testDeleteFolder() throws ParseException
+    {
+
+        Response f = fc.deleteFolder("jedlab");
+        System.out.println(f.getResult());
+        System.out.println(f.getMessage());
+
+    }
+    
+    @Test
+//    @Ignore
+    public void testDeleteFile() throws ParseException
+    {
+
+        Response f = fc.deleteFile("golestan.jpg");
+        System.out.println(f.getResult());
+        System.out.println(f.getMessage());
+
+    }
 
 }

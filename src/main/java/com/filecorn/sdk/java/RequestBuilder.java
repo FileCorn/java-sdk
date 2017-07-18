@@ -7,6 +7,7 @@ import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -160,6 +161,35 @@ public class RequestBuilder
             IOUtils.closeQuietly(content);
         }
         IOUtils.closeQuietly(fs);
+        return new RequestDecorator("".getBytes());
+    }
+    
+    public RequestDecorator delete() throws ClientProtocolException, IOException
+    {
+        StringBuilder uri = new StringBuilder().append(request.getUrl());
+        if(request.getPathParameter() != null)
+            uri.append("/").append(request.getPathParameter());
+        HttpDelete delete = new HttpDelete(uri.toString());
+        delete.setHeader("Authorization", String.format("FC %s", Env.getApiKey()));
+        delete.setHeader("X-FC-RECURSIVE", "true");
+        CloseableHttpResponse response = httpclient.execute(delete);
+        InputStream content = null;
+        try
+        {
+            int statusCode = response.getStatusLine().getStatusCode();
+            content = response.getEntity().getContent();
+            byte[] byteArray = IOUtils.toByteArray(content);
+            return new RequestDecorator(byteArray);
+        }
+        catch (Exception e)
+        {
+            logger.info(e.getMessage());
+        }
+        finally
+        {
+            IOUtils.closeQuietly(response);
+            IOUtils.closeQuietly(content);
+        }
         return new RequestDecorator("".getBytes());
     }
 

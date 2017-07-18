@@ -125,4 +125,56 @@ public class FileCorn extends Request implements FileCornApi
         }
     }
 
+    public Response deleteFolder(String folderName)
+    {
+        if (folderName.endsWith("/") == false) folderName += "/";
+        setPathParameter(folderName);       
+        try
+        {
+            RequestDecorator upload = requestBuilder.delete();
+            String content = upload.getContentAsString();
+            if (content != null)
+            {
+                JSONObject json = new JSONObject(content);
+                return new Response(json.getString("result"), json.getString("message"));
+            }
+            return new Response("failed", "unable to complete request");
+        }
+        catch (ClientProtocolException e)
+        {
+            throw new FileCornException(0);
+        }
+        catch (IOException e)
+        {
+            throw new FileCornException(0);
+        }
+        
+    }
+
+    public Response deleteFile(String fileName)
+    {
+        if (fileName.endsWith("/")) 
+            throw new FileCornException(20, "file can not end with /");
+        setPathParameter(fileName);       
+        try
+        {
+            RequestDecorator upload = requestBuilder.delete();
+            String content = upload.getContentAsString();
+            if (content != null)
+            {
+                JSONObject json = new JSONObject(content);
+                return new Response(json.getString("result"), json.getString("message"));
+            }
+            return new Response("failed", "unable to complete request");
+        }
+        catch (ClientProtocolException e)
+        {
+            throw new FileCornException(0);
+        }
+        catch (IOException e)
+        {
+            throw new FileCornException(0);
+        }
+    }
+
 }

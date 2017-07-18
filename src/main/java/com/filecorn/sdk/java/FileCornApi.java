@@ -12,4 +12,8 @@ public interface FileCornApi
     
     public FolderResponse folderList(String folderName);
     
+    public Response deleteFolder(String folderName);
+    
+    public Response deleteFile(String fileName);
+    
 }
