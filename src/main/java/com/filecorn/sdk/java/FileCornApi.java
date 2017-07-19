@@ -10,6 +10,8 @@ public interface FileCornApi
     
     public Response upload(File file);
     
+    public Response upload(byte[] file, String fileName);
+    
     public FolderResponse folderList(String folderName);
     
     public Response deleteFolder(String folderName);
