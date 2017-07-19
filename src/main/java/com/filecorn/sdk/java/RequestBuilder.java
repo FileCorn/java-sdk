@@ -1,5 +1,6 @@
 package com.filecorn.sdk.java;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
@@ -135,9 +137,11 @@ public class RequestBuilder
         HttpPut post = new HttpPut(uri.toString());        
         post.setHeader("Authorization", String.format("FC %s", Env.getApiKey()));
         post.setHeader("Accept", "*/*");
-        FileInputStream fs = new FileInputStream(request.getUploadFile());
+//        ByteArrayEntity bae = new ByteArrayEntity(request.getUploadFile());
+//        FileInputStream fs = new FileInputStream(request.getUploadFile());
+        ByteArrayInputStream bais = new ByteArrayInputStream(request.getUploadFile());
         InputStreamEntity reqEntity = new InputStreamEntity(
-                fs, -1, ContentType.APPLICATION_OCTET_STREAM);
+                bais, -1, ContentType.APPLICATION_OCTET_STREAM);
         reqEntity.setChunked(true);
         post.setEntity(reqEntity);
         
@@ -160,7 +164,7 @@ public class RequestBuilder
             IOUtils.closeQuietly(response);
             IOUtils.closeQuietly(content);
         }
-        IOUtils.closeQuietly(fs);
+        IOUtils.closeQuietly(bais);
         return new RequestDecorator("".getBytes());
     }
     

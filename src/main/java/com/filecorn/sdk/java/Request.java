@@ -12,19 +12,19 @@ public class Request
     private String url;
     private String postContent;
     private String pathParameter;
-    private File uploadFile;
+    private byte[] uploadFile;
 
     public Request(String url)
     {
         this.url = url;
     }
 
-    public File getUploadFile()
+    public byte[] getUploadFile()
     {
         return uploadFile;
     }
 
-    public void setUploadFile(File uploadFile)
+    public void setUploadFile(byte[] uploadFile)
     {
         this.uploadFile = uploadFile;
     }
@@ -76,7 +76,8 @@ public class Request
 
         public String getContentAsString()
         {
-            if (content == null || content.length == 0) return "";
+            if (content == null || content.length == 0)
+                return "";
             return new String(content);
         }
 

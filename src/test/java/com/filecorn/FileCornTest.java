@@ -45,7 +45,7 @@ public class FileCornTest
     }
 
     @Test
-    @Ignore
+//    @Ignore
     public void testUpload()
     {
         Response f = fc.upload(new File(getClass().getResource("/golestan_header.jpg").getFile()));
@@ -82,7 +82,7 @@ public class FileCornTest
     }
     
     @Test
-//    @Ignore
+    @Ignore
     public void testDeleteFile() throws ParseException
     {
 

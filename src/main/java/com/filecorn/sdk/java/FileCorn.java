@@ -1,11 +1,14 @@
 package com.filecorn.sdk.java;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,7 +34,8 @@ public class FileCorn extends Request implements FileCornApi
     {
         try
         {
-            if (folderName.endsWith("/") == false) folderName += "/";
+            if (folderName.endsWith("/") == false)
+                folderName += "/";
             setPathParameter(folderName);
             RequestDecorator put = requestBuilder.put();
             String content = put.getContentAsString();
@@ -54,7 +58,8 @@ public class FileCorn extends Request implements FileCornApi
 
     public FolderResponse folderList(String folderName)
     {
-        if (folderName.endsWith("/") == false) folderName += "/";
+        if (folderName.endsWith("/") == false)
+            folderName += "/";
         setPathParameter(folderName);
         try
         {
@@ -76,7 +81,8 @@ public class FileCorn extends Request implements FileCornApi
                     item.setName(jsonItem.getString("name"));
                     item.setSize(jsonItem.getString("size"));
                     int isf = jsonItem.getInt("is_folder");
-                    if (isf != 0) item.setFolder(true);
+                    if (isf != 0)
+                        item.setFolder(true);
                     item.setUrl(jsonItem.getString("url"));
                     items.add(item);
                 }
@@ -102,10 +108,33 @@ public class FileCorn extends Request implements FileCornApi
 
     public Response upload(File file)
     {
-        setPathParameter(file.getName());
-        setUploadFile(file);
+        
+        InputStream is = null;
         try
         {
+            is = new FileInputStream(file);
+            return upload(IOUtils.toByteArray(is), file.getName());
+        }
+        catch (ClientProtocolException e)
+        {
+            throw new FileCornException(0);
+        }
+        catch (IOException e)
+        {
+            throw new FileCornException(0);
+        }
+        finally
+        {
+            IOUtils.closeQuietly(is);
+        }
+    }
+    
+    public Response upload(byte[] file, String fileName)
+    {
+        setPathParameter(fileName);
+        try
+        {
+            setUploadFile(file);
             RequestDecorator upload = requestBuilder.upload();
             String content = upload.getContentAsString();
             if (content != null)
@@ -127,8 +156,9 @@ public class FileCorn extends Request implements FileCornApi
 
     public Response deleteFolder(String folderName)
     {
-        if (folderName.endsWith("/") == false) folderName += "/";
-        setPathParameter(folderName);       
+        if (folderName.endsWith("/") == false)
+            folderName += "/";
+        setPathParameter(folderName);
         try
         {
             RequestDecorator upload = requestBuilder.delete();
@@ -148,14 +178,14 @@ public class FileCorn extends Request implements FileCornApi
         {
             throw new FileCornException(0);
         }
-        
+
     }
 
     public Response deleteFile(String fileName)
     {
-        if (fileName.endsWith("/")) 
+        if (fileName.endsWith("/"))
             throw new FileCornException(20, "file can not end with /");
-        setPathParameter(fileName);       
+        setPathParameter(fileName);
         try
         {
             RequestDecorator upload = requestBuilder.delete();
