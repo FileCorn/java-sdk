@@ -1,6 +1,7 @@
 package com.filecorn.sdk.java;
 
 import java.io.File;
+import java.io.InputStream;
 
 public interface FileCornApi
 {
@@ -17,5 +18,7 @@ public interface FileCornApi
     public Response deleteFolder(String folderName);
     
     public Response deleteFile(String fileName);
+    
+    public InputStream downloadFile(String fileName);
     
 }

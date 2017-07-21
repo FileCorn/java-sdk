@@ -1,16 +1,23 @@
 package com.filecorn;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.filecorn.sdk.java.Env;
 import com.filecorn.sdk.java.FileCorn;
 import com.filecorn.sdk.java.FileCornApi;
 import com.filecorn.sdk.java.FolderResponse;
@@ -45,7 +52,7 @@ public class FileCornTest
     }
 
     @Test
-//    @Ignore
+    @Ignore
     public void testUpload()
     {
         Response f = fc.upload(new File(getClass().getResource("/golestan_header.jpg").getFile()));
@@ -90,6 +97,19 @@ public class FileCornTest
         System.out.println(f.getResult());
         System.out.println(f.getMessage());
 
+    }
+    
+    @Test
+    @Ignore
+    public void testDownloadFile() throws ParseException, IOException
+    {
+        InputStream downloadFile = fc.downloadFile("/omid/sd/280_1.mp3");
+        File file = new File(Env.USER_HOME + "/tt.mp3");
+        if(file.exists())
+            file.delete();
+        file.createNewFile();
+        OutputStream os = new FileOutputStream(file);
+        IOUtils.copy(downloadFile, os);
     }
 
 }

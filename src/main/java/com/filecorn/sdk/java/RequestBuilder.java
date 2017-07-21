@@ -48,7 +48,11 @@ public class RequestBuilder
         
         StringBuilder uri = new StringBuilder().append(request.getUrl());
         if(request.getPathParameter() != null)
-            uri.append("/").append(request.getPathParameter());
+        {
+            if(request.getPathParameter().startsWith("/") == false)
+                uri.append("/");
+            uri.append(request.getPathParameter());
+        }
         HttpGet get = new HttpGet(uri.toString());
         get.setHeader("Accept", "application/json");
         get.setHeader("User-Agent", "Mozilla/5.0");
@@ -103,7 +107,11 @@ public class RequestBuilder
     {
         StringBuilder uri = new StringBuilder().append(request.getUrl());
         if(request.getPathParameter() != null)
-            uri.append("/").append(request.getPathParameter());
+        {
+            if(request.getPathParameter().startsWith("/") == false)
+                uri.append("/");
+            uri.append(request.getPathParameter());
+        }
         HttpPut put = new HttpPut(uri.toString());
         if(request.getPostConent() != null)
             put.setEntity(new StringEntity(request.getPostConent(), "UTF-8"));
@@ -133,7 +141,11 @@ public class RequestBuilder
     {
         StringBuilder uri = new StringBuilder().append(request.getUrl());
         if(request.getPathParameter() != null)
-            uri.append("/").append(request.getPathParameter());
+        {
+            if(request.getPathParameter().startsWith("/") == false)
+                uri.append("/");
+            uri.append(request.getPathParameter());
+        }
         HttpPut post = new HttpPut(uri.toString());        
         post.setHeader("Authorization", String.format("FC %s", Env.getApiKey()));
         post.setHeader("Accept", "*/*");
@@ -172,7 +184,11 @@ public class RequestBuilder
     {
         StringBuilder uri = new StringBuilder().append(request.getUrl());
         if(request.getPathParameter() != null)
-            uri.append("/").append(request.getPathParameter());
+        {
+            if(request.getPathParameter().startsWith("/") == false)
+                uri.append("/");
+            uri.append(request.getPathParameter());
+        }
         HttpDelete delete = new HttpDelete(uri.toString());
         delete.setHeader("Authorization", String.format("FC %s", Env.getApiKey()));
         delete.setHeader("X-FC-RECURSIVE", "true");
@@ -195,6 +211,18 @@ public class RequestBuilder
             IOUtils.closeQuietly(content);
         }
         return new RequestDecorator("".getBytes());
+    }
+    
+    public InputStream download()
+    {
+        StringBuilder uri = new StringBuilder().append(request.getUrl());
+        if(request.getPathParameter() != null)
+        {
+            if(request.getPathParameter().startsWith("/") == false)
+                uri.append("/");
+            uri.append(request.getPathParameter());
+        }
+        return new JdkHttpConnection().sendGetRequest(uri.toString());
     }
 
     

@@ -207,4 +207,12 @@ public class FileCorn extends Request implements FileCornApi
         }
     }
 
+    public InputStream downloadFile(String fileName)
+    {
+        if (fileName.endsWith("/"))
+            throw new FileCornException(20, "file can not end with /");
+        setPathParameter(fileName);
+        return requestBuilder.download();
+    }
+
 }
