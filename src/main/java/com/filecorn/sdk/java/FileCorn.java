@@ -215,4 +215,12 @@ public class FileCorn extends Request implements FileCornApi
         return requestBuilder.download();
     }
 
+    public InputStream downloadFileByUri(String uri)
+    {
+        
+        if (uri.endsWith("/"))
+            throw new FileCornException(20, "file can not end with /");
+        return new JdkHttpConnection().sendGetRequest(uri);
+    }
+
 }

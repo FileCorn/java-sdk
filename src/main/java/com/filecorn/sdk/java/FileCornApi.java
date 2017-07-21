@@ -21,4 +21,6 @@ public interface FileCornApi
     
     public InputStream downloadFile(String fileName);
     
+    public InputStream downloadFileByUri(String uri);
+    
 }
